@@ -1,0 +1,47 @@
+{
+  "rules": [
+    {
+      "name": "aggregated",
+      "pattern": [
+        "criteo",
+        "aggregated"
+      ],
+      "applicationNamePosition": 2
+    },
+    {
+      "name": "agglo",
+      "pattern": [
+        "criteo",
+        "agglo"
+      ],
+      "applicationNamePosition": 2
+    },
+    {
+      "name": "aggregated-all",
+      "pattern": [
+        "criteo",
+        "aggregated-all"
+      ],
+      "applicationNamePosition": 2
+    },
+    {
+      "name": "legacy-hosting",
+      "pattern": [
+        "prometheus",
+        "hosting"
+      ],
+      "applicationNamePosition": 1
+    },
+    {
+      "name": "start-with-criteo",
+      "pattern": [
+        "criteo"
+      ],
+      "applicationNamePosition": 1
+    },
+    {
+      "name": "start-by-app",
+      "applicationNamePosition": 0
+    }
+  ]
+}
