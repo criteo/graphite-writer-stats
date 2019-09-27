@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/criteo/graphite-writer-stats/prometheus"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 type Stats struct {
@@ -15,7 +14,7 @@ type Stats struct {
 func (stats *Stats) process(metricPath string) {
 	metric := stats.getMetric(metricPath)
 	stats.Logger.Debug("metrics", zap.Any("metric", metric))
-	prometheus.IncMetricPathCounter(metric.ExtractedMetric, metric.ApplicationName, string(metric.ApplicationType), strconv.FormatBool(metric.IsPrometheus))
+	prometheus.IncMetricPathCounter(metric.ExtractedMetric, metric.ApplicationName, string(metric.ApplicationType))
 }
 
 func (stats *Stats) Process(dataPoint []byte) bool {

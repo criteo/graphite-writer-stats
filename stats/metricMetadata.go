@@ -12,18 +12,16 @@ type metric struct {
 	ExtractedMetric string
 	ApplicationName string
 	ApplicationType string
-	IsPrometheus    bool
 }
 
 func (stats *Stats) getMetric(metricPath string) metric {
-	statsMetric := metric{ExtractedMetric: metricPath, ApplicationName: "None", ApplicationType: "None", IsPrometheus: false}
+	statsMetric := metric{ExtractedMetric: metricPath, ApplicationName: "None", ApplicationType: "None"}
 	components := getComponents(metricPath, stats.MetricMetadata.ComponentsNb)
 	if len(components) > 1 {
 		rule := getRule(components, stats.MetricMetadata.Rules)
 		statsMetric.ApplicationType = rule.Name                                // rule.Name is check in rules.go
 		statsMetric.ApplicationName = components[rule.ApplicationNamePosition] // the ApplicationNamePosition is check in rules.go ( must be > 0 )
 		statsMetric.ExtractedMetric = strings.Join(components, ".")
-		statsMetric.IsPrometheus = isPrometheusMetric(components)
 	}
 	return statsMetric
 }
@@ -76,15 +74,4 @@ func getRule(components []string, allRules Rules) Rule {
 	}
 	rule := allRules.Rules[i] // In rules.go checkRules method we check if there is a default rule.
 	return rule
-}
-
-func isPrometheusMetric(components []string) bool {
-	i := 0
-	isPrometheus := false
-	for ; i < len(components) && components[i] != "prometheus"; i++ {
-	}
-	if i < len(components) && components[i] == "prometheus" {
-		isPrometheus = true
-	}
-	return isPrometheus
 }

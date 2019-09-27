@@ -76,20 +76,7 @@ func TestGetComponents(t *testing.T) {
 	}
 }
 
-func TestIsPrometheus(t *testing.T) {
-	isPrometheus := isPrometheusMetric([]string{"prometheus", "myapp"})
-	if !isPrometheus {
-		t.Error("should be a prometheus metric")
-	}
-	isPrometheus = isPrometheusMetric([]string{"myapp"})
-	if isPrometheus {
-		t.Error("should not be a prometheus metric")
-	}
-	isPrometheus = isPrometheusMetric([]string{})
-	if isPrometheus {
-		t.Error("should not be a prometheus metric")
-	}
-}
+
 func TestGetRule(t *testing.T) {
 	aggregatedRule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
 	aggloRule := Rule{"agglo", []string{"criteo", "agglo"}, 2}

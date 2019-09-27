@@ -12,7 +12,7 @@ var (
 	metricPathCount = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "metrics_path_total",
 		Help: "The total number of metrics paths events",
-	}, []string{"metric_path", "application", "application_type", "is_prometheus"})
+	}, []string{"metric_path", "application", "application_type"})
 	dataPointTometricErrorCount = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "metrics_error_total",
 		Help: "The total number of bad parsed metrics paths",
@@ -30,6 +30,6 @@ func IncDataPointToMetricErrorCounter() {
 	dataPointTometricErrorCount.Inc()
 }
 
-func IncMetricPathCounter(extractedMetric string, applicationName string, applicationType string, isPrometheus string) {
-	metricPathCount.WithLabelValues(extractedMetric, applicationName, applicationType, isPrometheus).Inc()
+func IncMetricPathCounter(extractedMetric string, applicationName string, applicationType string) {
+	metricPathCount.WithLabelValues(extractedMetric, applicationName, applicationType).Inc()
 }
