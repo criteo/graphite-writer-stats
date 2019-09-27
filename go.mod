@@ -1,13 +1,11 @@
 module github.com/criteo/graphite-writer-stats
 
-go 1.12
+go 1.13
 
 require (
 	github.com/Shopify/sarama v1.23.1
 	github.com/google/pprof v0.0.0-20190908185732-236ed259b199 // indirect
 	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.1.0
 	github.com/uber-go/zap v1.10.0
 	go.uber.org/atomic v1.4.0 // indirect

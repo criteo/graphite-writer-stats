@@ -1,11 +1,11 @@
-FROM golang:1.12.9 as builder
+FROM golang:1.13 as builder
 WORKDIR /workspace
 COPY go.sum go.mod ./
 RUN go mod download
 COPY . .
 RUN go build ./cmd/graphite-writer-stats/graphite-writer-stats.go
 
-FROM golang:1.12.9
+FROM golang:1.13
 WORKDIR /app
 COPY --from=builder /workspace/graphite-writer-stats .
 COPY --from=builder /workspace/configs/ configs/
