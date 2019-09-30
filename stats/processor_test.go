@@ -7,20 +7,20 @@ import (
 
 func TestProcess(t *testing.T) {
 	logger := zaptest.NewLogger(t)
-	aggregatedRule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
-	aggloRule := Rule{"agglo", []string{"criteo", "agglo"}, 2}
-	aggregatedAllRule := Rule{"aggregated-all", []string{"criteo", "aggregated-all"}, 2}
-	legacyHostingRule := Rule{"legacy-hosting", []string{"prometheus", "hosting"}, 1}
-	startWithCriteoRule := Rule{"start-by-criteo", []string{"criteo"}, 1}
+	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
+	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
+	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
+	legacybarRule := Rule{"legacy-bar", []string{"prometheus", "bar"}, 1}
+	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", []string{}, 0}
-	rulesTab := []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}
+	rulesTab := []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}
 
 	stats := Stats{Logger: logger, MetricMetadata: MetricMetadata{
 		Rules:        Rules{Rules: rulesTab},
 		ComponentsNb: 3,
 	}}
 
-	metricDatapoint := []byte("criteo.aggregated.cas.value 3.2 1498887")
+	metricDatapoint := []byte("foo.aggreg.cas.value 3.2 1498887")
 	success := stats.Process(metricDatapoint)
 	if !success {
 		t.Errorf("failed to process '%v'", string(metricDatapoint))
@@ -30,7 +30,7 @@ func TestProcess(t *testing.T) {
 	if success {
 		t.Errorf("process a nil metric should return false")
 	}
-	metricDatapoint = []byte("criteo.498887")
+	metricDatapoint = []byte("foo.498887")
 	success = stats.Process(metricDatapoint)
 	if success {
 		t.Errorf("process a mal formed metric should return false '%v'", string(metricDatapoint))

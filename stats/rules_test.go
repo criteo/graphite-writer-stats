@@ -9,41 +9,41 @@ func TestGetRules(t *testing.T) {
 	var jsonRules = []byte(`{
   "rules": [
     {
-      "name": "aggregated",
+      "name": "aggreg",
       "pattern": [
-        "criteo",
-        "aggregated"
+        "foo",
+        "aggreg"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "agglo",
+      "name": "anotheraggr",
       "pattern": [
-        "criteo",
-        "agglo"
+        "foo",
+        "anotheraggr"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "aggregated-all",
+      "name": "aggreg-all",
       "pattern": [
-        "criteo",
-        "aggregated-all"
+        "foo",
+        "aggreg-all"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "legacy-hosting",
+      "name": "legacy-bar",
       "pattern": [
         "prometheus",
-        "hosting"
+        "bar"
       ],
       "applicationNamePosition": 1
     },
     {
-      "name": "start-by-criteo",
+      "name": "start-by-foo",
       "pattern": [
-        "criteo"
+        "foo"
       ],
       "applicationNamePosition": 1
     },
@@ -53,38 +53,38 @@ func TestGetRules(t *testing.T) {
     }
   ]
 }`)
-	aggregatedRule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
-	aggloRule := Rule{"agglo", []string{"criteo", "agglo"}, 2}
-	aggregatedAllRule := Rule{"aggregated-all", []string{"criteo", "aggregated-all"}, 2}
-	legacyHostingRule := Rule{"legacy-hosting", []string{"prometheus", "hosting"}, 1}
-	startWithCriteoRule := Rule{"start-by-criteo", []string{"criteo"}, 1}
+	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
+	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
+	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
+	legacybarRule := Rule{"legacy-bar", []string{"prometheus", "bar"}, 1}
+	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
-	rulesExpected := []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}
+	rulesExpected := []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}
 	rules, err := GetRulesFromBytes(jsonRules)
 	if (!reflect.DeepEqual(rules.Rules, rulesExpected)) || err != nil {
 		t.Errorf("fail to parse rules : expected: '%v' actual: '%v', err: '%v'", rulesExpected, rules.Rules, err)
 	}
 }
 func TestCheckRules(t *testing.T) {
-	aggregatedRule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
-	aggloRule := Rule{"agglo", []string{"criteo", "agglo"}, 2}
-	aggregatedAllRule := Rule{"aggregated-all", []string{"criteo", "aggregated-all"}, 2}
-	legacyHostingRule := Rule{"legacy-hosting", []string{"prometheus", "hosting"}, 1}
-	startWithCriteoRule := Rule{"start-by-criteo", []string{"criteo"}, 1}
+	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
+	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
+	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
+	legacybarRule := Rule{"legacy-bar", []string{"prometheus", "bar"}, 1}
+	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
-	rules := Rules{Rules: []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}}
+	rules := Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
 	err := checkRules(rules)
 	if err != nil {
 		t.Errorf("should not get the error: `%v`", err)
 	}
 	startbyAppRule = Rule{"", nil, 0}
-	rules = Rules{Rules: []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}}
+	rules = Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
 	err = checkRules(rules)
 	if err == nil {
 		t.Errorf("the rule should have a name: `%v`", err)
 	}
 	startbyAppRule = Rule{"aa", []string{"za"}, 0}
-	rules = Rules{Rules: []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}}
+	rules = Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
 	err = checkRules(rules)
 	if err == nil {
 		t.Errorf("the rules should have a default rule (without pattern) : `%v`", err)

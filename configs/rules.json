@@ -1,41 +1,41 @@
 {
   "rules": [
     {
-      "name": "aggregated",
+      "name": "aggreg",
       "pattern": [
-        "criteo",
+        "foo",
         "aggregated"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "agglo",
+      "name": "anotheraggreg",
       "pattern": [
-        "criteo",
+        "foo",
         "agglo"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "aggregated-all",
+      "name": "aggreg-all",
       "pattern": [
-        "criteo",
-        "aggregated-all"
+        "foo",
+        "aggreg-all"
       ],
       "applicationNamePosition": 2
     },
     {
-      "name": "legacy-hosting",
+      "name": "legacy-foo",
       "pattern": [
         "prometheus",
-        "hosting"
+        "foo"
       ],
       "applicationNamePosition": 1
     },
     {
-      "name": "start-with-criteo",
+      "name": "start-with-foo",
       "pattern": [
-        "criteo"
+        "foo"
       ],
       "applicationNamePosition": 1
     },

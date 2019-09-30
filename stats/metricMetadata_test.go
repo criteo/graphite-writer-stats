@@ -28,18 +28,18 @@ func TestCheapEquals(t *testing.T) {
 	}
 }
 func TestIsMatchingRule(t *testing.T) {
-	rule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
-	isMatchedRule := isMatchingRule([]string{"criteo", "aggregated", "d"}, rule)
+	rule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
+	isMatchedRule := isMatchingRule([]string{"foo", "aggreg", "d"}, rule)
 	if !isMatchedRule {
 		t.Error("should match the rule but for now it doesn't ")
 	}
-	rule = Rule{"aggregated", []string{"criteo", "agglo"}, 2}
-	isMatchedRule = isMatchingRule([]string{"criteo", "aggregated", "d"}, rule)
+	rule = Rule{"aggreg", []string{"foo", "anotheraggr"}, 2}
+	isMatchedRule = isMatchingRule([]string{"foo", "aggreg", "d"}, rule)
 	if isMatchedRule {
 		t.Error("should not match the rule but for now it doesn't ")
 	}
 	var rule2 Rule
-	isMatchedRule = isMatchingRule([]string{"criteo", "aggregated", "d"}, rule2)
+	isMatchedRule = isMatchingRule([]string{"foo", "aggreg", "d"}, rule2)
 	if !isMatchedRule {
 		t.Error("should match because an empty rule is a default rule ! ")
 	}
@@ -78,15 +78,15 @@ func TestGetComponents(t *testing.T) {
 
 
 func TestGetRule(t *testing.T) {
-	aggregatedRule := Rule{"aggregated", []string{"criteo", "aggregated"}, 2}
-	aggloRule := Rule{"agglo", []string{"criteo", "agglo"}, 2}
-	aggregatedAllRule := Rule{"aggregated-all", []string{"criteo", "aggregated-all"}, 2}
-	legacyHostingRule := Rule{"legacy-hosting", []string{"prometheus", "hosting"}, 1}
-	startWithCriteoRule := Rule{"start-by-criteo", []string{"criteo"}, 1}
+	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
+	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
+	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
+	legacybarRule := Rule{"legacy-bar", []string{"prometheus", "bar"}, 1}
+	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
-	rules := Rules{Rules: []Rule{aggregatedRule, aggloRule, aggregatedAllRule, legacyHostingRule, startWithCriteoRule, startbyAppRule}}
-	rule := getRule([]string{"criteo", "aggregated", "myapp"}, rules)
-	if rule.Name != aggregatedRule.Name {
-		t.Error("should be an aggregated metric")
+	rules := Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
+	rule := getRule([]string{"foo", "aggreg", "myapp"}, rules)
+	if rule.Name != aggregRule.Name {
+		t.Error("should be an aggreg metric")
 	}
 }
