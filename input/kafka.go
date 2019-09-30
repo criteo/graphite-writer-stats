@@ -66,14 +66,6 @@ func (kafka *Kafka) Run() {
 }
 
 func (kafka *Kafka) Close() {
-	kafka.cancel()
-	kafka.wg.Wait()
-	err := kafka.client.Close()
-	if err != nil {
-		kafka.logger.Panic("Error closing client: %v", zap.Error(err))
-	}
-}
-func (kafka *Kafka) Wait() {
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM)
 	select {
@@ -81,6 +73,12 @@ func (kafka *Kafka) Wait() {
 		kafka.logger.Info("terminating: context cancelled")
 	case <-sigterm:
 		kafka.logger.Info("terminating: via signal")
+	}
+	kafka.cancel()
+	kafka.wg.Wait()
+	err := kafka.client.Close()
+	if err != nil {
+		kafka.logger.Panic("Error closing client: %v", zap.Error(err))
 	}
 }
 

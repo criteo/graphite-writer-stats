@@ -1,7 +1,12 @@
 ---
-version: '2'
+version: '3'
+networks:
+  kafka:
 services:
   zookeeper:
+    container_name: zookeeper
+    networks:
+      - kafka
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -26,6 +31,9 @@ services:
     # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
     #
     image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    networks:
+      - kafka
     depends_on:
       - zookeeper
     ports:

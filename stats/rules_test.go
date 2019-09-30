@@ -1,11 +1,13 @@
 package stats
 
 import (
+	"go.uber.org/zap/zaptest"
 	"reflect"
 	"testing"
 )
 
 func TestGetRules(t *testing.T) {
+
 	var jsonRules = []byte(`{
   "rules": [
     {
@@ -53,6 +55,7 @@ func TestGetRules(t *testing.T) {
     }
   ]
 }`)
+	logger := zaptest.NewLogger(t)
 	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
 	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
 	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
@@ -60,12 +63,13 @@ func TestGetRules(t *testing.T) {
 	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
 	rulesExpected := []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}
-	rules, err := GetRulesFromBytes(jsonRules)
+	rules, err := GetRulesFromBytes(logger,jsonRules)
 	if (!reflect.DeepEqual(rules.Rules, rulesExpected)) || err != nil {
 		t.Errorf("fail to parse rules : expected: '%v' actual: '%v', err: '%v'", rulesExpected, rules.Rules, err)
 	}
 }
 func TestCheckRules(t *testing.T) {
+	logger := zaptest.NewLogger(t)
 	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}
 	anotheraggrRule := Rule{"anotheraggr", []string{"foo", "anotheraggr"}, 2}
 	aggregAllRule := Rule{"aggreg-all", []string{"foo", "aggreg-all"}, 2}
@@ -73,24 +77,18 @@ func TestCheckRules(t *testing.T) {
 	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
 	rules := Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
-	err := checkRules(rules)
+	err := checkRules(logger,rules)
 	if err != nil {
 		t.Errorf("should not get the error: `%v`", err)
 	}
 	startbyAppRule = Rule{"", nil, 0}
 	rules = Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
-	err = checkRules(rules)
+	err = checkRules(logger,rules)
 	if err == nil {
 		t.Errorf("the rule should have a name: `%v`", err)
 	}
-	startbyAppRule = Rule{"aa", []string{"za"}, 0}
-	rules = Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
-	err = checkRules(rules)
-	if err == nil {
-		t.Errorf("the rules should have a default rule (without pattern) : `%v`", err)
-	}
-	err = checkRules(Rules{nil})
-	if err == nil {
-		t.Errorf("the rules should have a default rule : `%v`", err)
+	err = checkRules(logger,Rules{nil})
+	if err != nil {
+		t.Error("rules is not mandatory")
 	}
 }

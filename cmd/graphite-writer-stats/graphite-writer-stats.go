@@ -37,14 +37,14 @@ func main() {
 		panic("ComponentsNb should be > 0")
 	}
 	jsonRules, err := ioutil.ReadFile(*config)
-	rules, err := stats.GetRulesFromBytes(jsonRules)
+	rules, err := stats.GetRulesFromBytes(logger,jsonRules)
 	if err != nil {
 		logger.Panic("bad config rule.", zap.String("configFile", *config))
 	}
 	stats := stats.Stats{Logger: logger, MetricMetadata: stats.MetricMetadata{ComponentsNb: *componentsNb, Rules: rules}}
-	prometheus.SetupPrometheusHTTPServer(int(*port), *endpoint)
+	prometheus.SetupPrometheusHTTPServer(logger,int(*port), *endpoint)
 	kafka := input.SetupConsumer(logger, *oldest, *group, *brokers, *topic, stats)
 	kafka.Run()
-	kafka.Wait()
+	//kafka.Wait()
 	kafka.Close()
 }

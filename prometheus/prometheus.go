@@ -18,6 +18,10 @@ var (
 		Name: "metrics_error_total",
 		Help: "The total number of bad parsed metrics paths",
 	})
+	metricPathDidNotMatchAnyRulesCount = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "metric_path_did_not_match_rules_total",
+		Help: "The total number of bad parsed metrics paths",
+	})
 )
 
 func SetupPrometheusHTTPServer(logger *zap.Logger,port int, endpoint string) {
@@ -33,7 +37,9 @@ func SetupPrometheusHTTPServer(logger *zap.Logger,port int, endpoint string) {
 func IncDataPointToMetricErrorCounter() {
 	dataPointTometricErrorCount.Inc()
 }
-
+func IncMetricPathDidNotMatchAnyRules() {
+	dataPointTometricErrorCount.Inc()
+}
 func IncMetricPathCounter(extractedMetric string, applicationName string, applicationType string) {
 	metricPathCount.WithLabelValues(extractedMetric, applicationName, applicationType).Inc()
 }

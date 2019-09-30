@@ -1,5 +1,9 @@
 Build your image:
-` ./docker-build.sh configs/observability/global preprod par`
+`make build-dev`
+OR 
+`make docker-build`
+
 Run your image:
-`./docker-run.sh prometheus-preprod.yml`
-# graphite-writer-stats
+`make run`
+OR 
+`make docker-start` 

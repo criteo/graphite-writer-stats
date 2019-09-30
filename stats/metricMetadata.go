@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"go.uber.org/zap"
 	"strings"
 )
 
@@ -15,10 +16,10 @@ type metric struct {
 }
 
 func (stats *Stats) getMetric(metricPath string) metric {
-	statsMetric := metric{ExtractedMetric: metricPath, ApplicationName: "None", ApplicationType: "None"}
+	statsMetric := metric{ExtractedMetric: "None", ApplicationName: "None", ApplicationType: "None"}
 	components := getComponents(metricPath, stats.MetricMetadata.ComponentsNb)
-	if len(components) > 1 {
-		rule := getRule(components, stats.MetricMetadata.Rules)
+	rule := getRule(stats.Logger,components, stats.MetricMetadata.Rules)
+	if rule.Name != "" {
 		statsMetric.ApplicationType = rule.Name                                // rule.Name is check in rules.go
 		statsMetric.ApplicationName = components[rule.ApplicationNamePosition] // the ApplicationNamePosition is check in rules.go ( must be > 0 )
 		statsMetric.ExtractedMetric = strings.Join(components, ".")
@@ -68,10 +69,15 @@ func cheapEqual(array1 []string, array2 []string) bool {
 	return equals
 }
 
-func getRule(components []string, allRules Rules) Rule {
+func getRule(logger *zap.Logger,components []string, allRules Rules) Rule {
 	i := 0
+	var rule Rule
 	for ; i < len(allRules.Rules) && !isMatchingRule(components, allRules.Rules[i]); i++ {
 	}
-	rule := allRules.Rules[i] // In rules.go checkRules method we check if there is a default rule.
+	if  i < len(allRules.Rules) {
+		rule = allRules.Rules[i]
+	} else {
+		logger.Warn("Metric Path did not match any rules",zap.Strings("metricPath",components))
+	}
 	return rule
 }
