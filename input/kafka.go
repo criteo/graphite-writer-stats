@@ -13,7 +13,6 @@ import (
 )
 
 type Kafka struct {
-	ready  chan bool
 	logger *zap.Logger
 	topic  []string
 	client sarama.ConsumerGroup
