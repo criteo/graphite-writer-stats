@@ -24,10 +24,6 @@ type Kafka struct {
 }
 
 func SetupConsumer(logger *zap.Logger, oldest bool, group string, brokers string, topic string, stats stats.Stats) *Kafka {
-	/**
-	 * Construct a new Sarama configuration.
-	 * The Kafka cluster version has to be defined before the consumer/producer is initialized.
-	 */
 	config := sarama.NewConfig()
 	config.Version = sarama.V2_3_0_0
 	if oldest {
