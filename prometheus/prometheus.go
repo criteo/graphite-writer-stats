@@ -24,13 +24,13 @@ var (
 	})
 )
 
-func SetupPrometheusHTTPServer(logger *zap.Logger,port int, endpoint string) {
+func SetupPrometheusHTTPServer(logger *zap.Logger, port int, endpoint string) {
 	go func() {
 		portBinding := ":" + strconv.Itoa(port)
 		http.Handle(endpoint, promhttp.Handler())
-		err:=http.ListenAndServe(portBinding, nil)
-		if err!= nil {
-			logger.Panic("could not set up prometheus endpoint",zap.Error(err))
+		err := http.ListenAndServe(portBinding, nil)
+		if err != nil {
+			logger.Panic("could not set up prometheus endpoint", zap.Error(err))
 		}
 	}()
 }

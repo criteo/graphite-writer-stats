@@ -24,3 +24,5 @@ docker-start:
 	docker run --rm --name graphite-writer-stats --network integration_kafka -p 8080:8080 -v $(shell pwd)/configs/:/app/configs/ graphite-writer-stats --brokers kafka:29092 --topic metrics -group graphite-writer-stats
 docker-stop:
 	docker stop graphite-writer-stats
+docker-inject:
+	docker exec -i kafka kafka-console-producer --broker-list localhost:9092 --topic metrics

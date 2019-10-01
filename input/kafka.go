@@ -44,7 +44,7 @@ func SetupConsumer(logger *zap.Logger, oldest bool, group string, brokers string
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
-	return &Kafka{ready: make(chan bool), logger: logger, topic: []string{topic}, client: client, ctx: ctx, cancel: cancel, wg: wg, stats: stats}
+	return &Kafka{logger: logger, topic: []string{topic}, client: client, ctx: ctx, cancel: cancel, wg: wg, stats: stats}
 }
 
 func (kafka *Kafka) Run() {
@@ -60,12 +60,8 @@ func (kafka *Kafka) Run() {
 			}
 		}
 	}()
-
-	<-kafka.ready // Await till the consumer has been set up
-	kafka.logger.Info("Kafka consumer up")
 }
-
-func (kafka *Kafka) Close() {
+func (kafka *Kafka) Wait() {
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM)
 	select {
@@ -74,6 +70,8 @@ func (kafka *Kafka) Close() {
 	case <-sigterm:
 		kafka.logger.Info("terminating: via signal")
 	}
+}
+func (kafka *Kafka) Close() {
 	kafka.cancel()
 	kafka.wg.Wait()
 	err := kafka.client.Close()
@@ -84,8 +82,6 @@ func (kafka *Kafka) Close() {
 
 // Setup is run at the beginning of a new session, before ConsumeClaim
 func (kafka *Kafka) Setup(sarama.ConsumerGroupSession) error {
-	// Mark the kafka as ready
-	close(kafka.ready)
 	return nil
 }
 
@@ -96,7 +92,6 @@ func (kafka *Kafka) Cleanup(sarama.ConsumerGroupSession) error {
 
 // ConsumeClaim must start a consumer loop of ConsumerGroupClaim's Messages().
 func (kafka *Kafka) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
-	
 	for message := range claim.Messages() {
 		kafka.logger.Debug("Message", zap.ByteString("message", message.Value), zap.Time("timestamp", message.Timestamp), zap.ByteString("key", message.Key))
 		kafka.stats.Process(message.Value)

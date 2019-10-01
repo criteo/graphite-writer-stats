@@ -63,7 +63,7 @@ func TestGetRules(t *testing.T) {
 	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
 	rulesExpected := []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}
-	rules, err := GetRulesFromBytes(logger,jsonRules)
+	rules, err := GetRulesFromBytes(logger, jsonRules)
 	if (!reflect.DeepEqual(rules.Rules, rulesExpected)) || err != nil {
 		t.Errorf("fail to parse rules : expected: '%v' actual: '%v', err: '%v'", rulesExpected, rules.Rules, err)
 	}
@@ -77,17 +77,17 @@ func TestCheckRules(t *testing.T) {
 	startWithCriteoRule := Rule{"start-by-foo", []string{"foo"}, 1}
 	startbyAppRule := Rule{"start-by-app", nil, 0}
 	rules := Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
-	err := checkRules(logger,rules)
+	err := checkRules(logger, rules)
 	if err != nil {
 		t.Errorf("should not get the error: `%v`", err)
 	}
 	startbyAppRule = Rule{"", nil, 0}
 	rules = Rules{Rules: []Rule{aggregRule, anotheraggrRule, aggregAllRule, legacybarRule, startWithCriteoRule, startbyAppRule}}
-	err = checkRules(logger,rules)
+	err = checkRules(logger, rules)
 	if err == nil {
 		t.Errorf("the rule should have a name: `%v`", err)
 	}
-	err = checkRules(logger,Rules{nil})
+	err = checkRules(logger, Rules{nil})
 	if err != nil {
 		t.Error("rules is not mandatory")
 	}

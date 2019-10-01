@@ -18,11 +18,15 @@ type metric struct {
 func (stats *Stats) getMetric(metricPath string) metric {
 	statsMetric := metric{ExtractedMetric: "None", ApplicationName: "None", ApplicationType: "None"}
 	components := getComponents(metricPath, stats.MetricMetadata.ComponentsNb)
-	rule := getRule(stats.Logger,components, stats.MetricMetadata.Rules)
-	if rule.Name != "" {
+	rule := getRule(components, stats.MetricMetadata.Rules)
+	if rule.Name == "" {
+		stats.Logger.Warn("Metric Path did not match any rules", zap.String("metricPath", metricPath))
+	} else if int(rule.ApplicationNamePosition) < len(components) {
 		statsMetric.ApplicationType = rule.Name                                // rule.Name is check in rules.go
 		statsMetric.ApplicationName = components[rule.ApplicationNamePosition] // the ApplicationNamePosition is check in rules.go ( must be > 0 )
 		statsMetric.ExtractedMetric = strings.Join(components, ".")
+	} else {
+		stats.Logger.Error("bad metric ", zap.String("metricPath", metricPath), zap.String("rule", rule.Name))
 	}
 	return statsMetric
 }
@@ -46,9 +50,11 @@ func getComponents(metricPath string, componentsLen uint) []string {
 }
 
 func isMatchingRule(components []string, rule Rule) bool {
-	match := true
+	match := false
 	patternLen := len(rule.Pattern)
-	if len(components) >= patternLen && patternLen > 0 {
+	if patternLen == 0 {
+		match = true
+	} else if len(components) >= patternLen && patternLen > 0 {
 		extractedComponent := components[0:patternLen]
 		match = cheapEqual(rule.Pattern, extractedComponent)
 	}
@@ -69,15 +75,13 @@ func cheapEqual(array1 []string, array2 []string) bool {
 	return equals
 }
 
-func getRule(logger *zap.Logger,components []string, allRules Rules) Rule {
+func getRule(components []string, allRules Rules) Rule {
 	i := 0
 	var rule Rule
 	for ; i < len(allRules.Rules) && !isMatchingRule(components, allRules.Rules[i]); i++ {
 	}
-	if  i < len(allRules.Rules) {
+	if i < len(allRules.Rules) {
 		rule = allRules.Rules[i]
-	} else {
-		logger.Warn("Metric Path did not match any rules",zap.Strings("metricPath",components))
 	}
 	return rule
 }

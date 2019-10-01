@@ -15,14 +15,14 @@ type Rule struct {
 	ApplicationNamePosition uint     `json:"applicationNamePosition"`
 }
 
-func GetRulesFromBytes(logger *zap.Logger,jsonBytes []byte) (Rules, error) {
+func GetRulesFromBytes(logger *zap.Logger, jsonBytes []byte) (Rules, error) {
 	var rules Rules
 	err := json.Unmarshal(jsonBytes, &rules)
-	err = checkRules(logger,rules)
+	err = checkRules(logger, rules)
 	return rules, err
 }
 
-func checkRules(logger *zap.Logger,rules Rules) error {
+func checkRules(logger *zap.Logger, rules Rules) error {
 	var err error
 	if len(rules.Rules) <= 0 {
 		zap.L().Warn("No rules defined.")

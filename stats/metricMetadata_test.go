@@ -41,7 +41,7 @@ func TestIsMatchingRule(t *testing.T) {
 	var rule2 Rule
 	isMatchedRule = isMatchingRule([]string{"foo", "aggreg", "d"}, rule2)
 	if !isMatchedRule {
-		t.Error("should match because an empty rule is a default rule ! ")
+		t.Error("should  match as pattern len equals 0 ! ")
 	}
 }
 
@@ -75,7 +75,6 @@ func TestGetComponents(t *testing.T) {
 		t.Errorf("components not good for `%v` actual: `%v` expected:`%v`", metricPath, components, componentsExpected)
 	}
 }
-
 
 func TestGetRule(t *testing.T) {
 	aggregRule := Rule{"aggreg", []string{"foo", "aggreg"}, 2}

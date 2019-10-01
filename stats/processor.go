@@ -13,7 +13,9 @@ type Stats struct {
 
 func (stats *Stats) process(metricPath string) {
 	metric := stats.getMetric(metricPath)
-	stats.Logger.Debug("metrics", zap.Any("metric", metric))
+	if ce := stats.Logger.Check(zap.DebugLevel, "metrics"); ce != nil {
+		ce.Write(zap.Any("metric", metric))
+	}
 	prometheus.IncMetricPathCounter(metric.ExtractedMetric, metric.ApplicationName, string(metric.ApplicationType))
 }
 
@@ -29,6 +31,10 @@ func (stats *Stats) Process(dataPoint []byte) bool {
 }
 
 func extractMetricPath(metric []byte) (string, bool) {
+	index := 0
 	indexSpace := bytes.IndexByte(metric, ' ')
-	return string(metric[:indexSpace+1]), indexSpace != -1
+	if indexSpace != -1 {
+		index = indexSpace
+	}
+	return string(metric[:index]), indexSpace != -1
 }
