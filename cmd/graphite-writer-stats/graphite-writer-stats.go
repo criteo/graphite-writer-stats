@@ -39,7 +39,7 @@ func main() {
 	jsonRules, err := ioutil.ReadFile(*config)
 	rules, err := stats.GetRulesFromBytes(logger, jsonRules)
 	if err != nil {
-		logger.Fatal("bad config rule.", zap.String("configFile", *config))
+		logger.Fatal("bad config rule.", zap.String("configFile", *config),zap.Error(err))
 	}
 	stats := stats.Stats{Logger: logger, MetricMetadata: stats.MetricMetadata{ComponentsNb: *componentsNb, Rules: rules}}
 	prometheus.SetupPrometheusHTTPServer(logger, int(*port), *endpoint)
