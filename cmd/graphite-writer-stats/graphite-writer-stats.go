@@ -25,21 +25,21 @@ func main() {
 	defer logger.Sync()
 	flag.Parse()
 	if len(*brokers) == 0 {
-		panic("no Kafka bootstrap brokers defined, please set the -brokers flag")
+		logger.Fatal("no Kafka bootstrap brokers defined, please set the -brokers flag")
 	}
 	if len(*topic) == 0 {
-		panic("no Kafka topic given to be consumed, please set the -topic flag")
+		logger.Fatal("no Kafka topic given to be consumed, please set the -topic flag")
 	}
 	if len(*group) == 0 {
-		panic("no Kafka consumer group defined, please set the -group flag")
+		logger.Fatal("no Kafka consumer group defined, please set the -group flag")
 	}
 	if *componentsNb <= 0 {
-		panic("ComponentsNb should be > 0")
+		logger.Fatal("ComponentsNb should be > 0")
 	}
 	jsonRules, err := ioutil.ReadFile(*config)
 	rules, err := stats.GetRulesFromBytes(logger, jsonRules)
 	if err != nil {
-		logger.Panic("bad config rule.", zap.String("configFile", *config))
+		logger.Fatal("bad config rule.", zap.String("configFile", *config))
 	}
 	stats := stats.Stats{Logger: logger, MetricMetadata: stats.MetricMetadata{ComponentsNb: *componentsNb, Rules: rules}}
 	prometheus.SetupPrometheusHTTPServer(logger, int(*port), *endpoint)
