@@ -2,7 +2,10 @@ language: go
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: $GITHUB_TOKEN
+  github_token: "$GITHUB_TOKEN"
   keep_history: true
   on:
     branch: master
+env:
+  global:
+    secure: pmaXkBhvgC6Nb+1CUzweJAQW5fteIwyPJv+eRNp1unFjiAa56C8pXp95QYmPOw6tzbKWFobflA9A0tU3/Ijr/jGc84541ELH679NlCk6FII12KXsgFGKrVBUDVeYqSZkuaAwzNmUK+tS3R5g8lI89UV2lWIHbqujbgvsaHMkrTaKZ7j+ZJe8wqzEIFDET5VMuGV/vAluwT10yA3ZZcShgN6DHyCKGlbjoxbykh7aWZRDkpKI/hPvT0y0vhhOAXH35NKmJMf+3S+O57hC+fXUl8jt7EIMf8FdUKvF2mexBwwdCKrrpScyirl2d2foolLmDgox7vyyFN61ZEMZ0H6pWSHpx/piCqmYaPpZWBybOEvPYAWikksaVB9VA3YKlGvD0A12cbfMiKpvaM7ZjvB+2nho9qR+UT4hrW+mFfMUSZbUUYIARzohT4o5tSwsnK1UtMug3QHjFpqAxtNk/SecKsK/R2gU4ygOuU8JGfUXJgBNWsqinqEHwlbOgY8KjX7z4F+YAQhjwCzRBG596grfuBaURrhrGlGsfAA5h++YhO56HfPmksC+4qMA8D438dNxIsNWh9YXK88Wuj4dmj/KsEXXqOKzh6/Z8T/4nLR7E7sZ+gttLrv/TwhXaN1kYfWxtGfd/wf+XMMhZBmDsybnWU8++JgZT/6oDfReHgyMVmU=
