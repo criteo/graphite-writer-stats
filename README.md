@@ -1,4 +1,8 @@
+# PROJECT DEPRECATED
+
 # Graphite-Writer-Stats
+
+
 
 This service reads a kafka topic for metrics in the plaintext graphite format to extract and count application names from them, and export these counters as a prometheus exporter.
 
